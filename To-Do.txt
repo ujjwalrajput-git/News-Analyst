@@ -8,5 +8,5 @@ To Do
 Tools
 
 power automate
-Octoparse- Easy Web Scraping Tool
+Octoparse- Easy Web Scraping Tool -- https://www.youtube.com/watch?v=1PLta8E_HsA
  
