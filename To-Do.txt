@@ -1,0 +1,11 @@
+To Do
+
+1. Web scraping 
+2. sentimental analysis
+
+
+------------------------------------------------------------------
+Tools
+
+power automate
+ 
