@@ -1,6 +1,7 @@
-import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 import time
+import requests
 import pandas as pd
 import os
 
@@ -11,7 +12,7 @@ def scrape_google_news_to_excel(num_pages=5):
     headlines_list = []
     sources_list = []
     dates_list = []
-    links_list = []
+#    links_list = []
 
     for page_num in range(num_pages):
         url = base_url.format(search_query)
@@ -19,27 +20,32 @@ def scrape_google_news_to_excel(num_pages=5):
 
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
+            
             headlines = soup.find_all("h3", class_="ipQwMb ekueJc RD0gLb")
-            sources_and_dates = soup.find_all("div", class_="SVJrMe")
+            dates = soup.find_all("time", class_="WW6dff uQIVzc Sksgp slhocf")
+            sources = soup.find_all("div", class_="N0NI1d AVN2gc WfKKme")
+#           sources_and_dates = soup.find_all("time", class_="WW6dff uQIVzc Sksgp slhocf") #class="WW6dff uQIVzc Sksgp slhocf" <-- SVJrMe
+            
+            
 
-            for headline, source_date in zip(headlines, sources_and_dates):
-                try:
-                    source = source_date.find("div", class_="BNeawe UPmit AP7Wnd").text
-                except AttributeError:
-                    source = "N/A"
+            for headline, sources, dates in zip(headlines, sources , dates):
 
-                try:
-                    date = source_date.find("time", class_="WW6dff uQIVzc Sksgp").text
-                except AttributeError:
-                    date = "N/A"
-
+            #    try:
+            #    date = dates["datetime"]
+            #    except AttributeError:
+            #        date = "N/A"
+                date = dates["datetime"]
+                source = sources.a.text
                 headline_text = headline.a.text
-                headline_link = "https://news.google.com" + headline.a["href"]
+            #    headline_link = "https://news.google.com" + headline.a["href"]
 
+                parsed_date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+                formatted_date = parsed_date.strftime("%H:%M  %d-%b-%y")
+                
                 headlines_list.append(headline_text)
                 sources_list.append(source)
-                dates_list.append(date)
-                links_list.append(headline_link)
+                dates_list.append(formatted_date)
+            #    links_list.append(headline_link)
 
             time.sleep(2)  # Add a delay to avoid overloading the server
 
@@ -47,7 +53,7 @@ def scrape_google_news_to_excel(num_pages=5):
         "Headline": headlines_list,
         "Source": sources_list,
         "Date": dates_list,
-        "Link": links_list
+#        "Link": links_list
     }
 
     df = pd.DataFrame(data)
