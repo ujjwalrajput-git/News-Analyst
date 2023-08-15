@@ -5,9 +5,9 @@ import requests
 import pandas as pd
 import os
 
-num_pages=1
 base_url = "https://news.google.com/search?q="
 cps = ['HDFC','SBI','ICICI']  # Replace with your desired search query
+num_pages=1
 
 headlines_list = []
 sources_list = []
